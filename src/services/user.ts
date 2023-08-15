@@ -21,6 +21,10 @@ class UserService {
         return createHmac("sha256", salt).update(password).digest("hex");
     }
 
+    public static async getUserById(id: string) {
+        return await prismaClient.user.findUnique({ where: { id } });
+    }
+
     public static createUser(payload: ICreateUserPayload) {
         const { firstName, lastName, email, password } = payload;
         const salt = randomBytes(32).toString("hex");
@@ -57,6 +61,10 @@ class UserService {
         });
 
         return token;
+    }
+
+    public static async userDecodeJWTToken(token: string) {
+        return JWT.verify(token, JWT_SECRET);
     }
 }
 

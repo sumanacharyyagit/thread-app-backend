@@ -6,10 +6,12 @@ async function apoloGraphQlServer() {
     // CREATE a GrapgQL Server
     const gqlServer = new ApolloServer({
         typeDefs: `
+                ${User.typeDefs}
                 type Query {
                     hello: String
                     say(name: String): String
                     ${User.queries}
+                    getContext: String 
                 }
                 type Mutation {
                     ${User.mutations}
@@ -20,6 +22,10 @@ async function apoloGraphQlServer() {
                 hello: () => "hello there",
                 say: (_, { name }: { name: String }) => `Hey welcome ${name}`,
                 ...User.resolvers.queries,
+                getContext: (_: any, parameters: any, context: any) => {
+                    console.log(context, "Context");
+                    return "OKAAAYYYYY";
+                },
             },
             Mutation: {
                 ...User.resolvers.mutations,
